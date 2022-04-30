@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Two nxm matrix addition</title>
+</head>
+
+<body>
+    <script type="src/queenWorker.js"></script>
+    <script>
+        function random(mn, mx) {
+            return Math.random() * (mx - mn) + mn;
+        }
+
+        var A = [];
+        var B = [];
+        var R = []
+
+        var n = random(1, 21);
+        var m = random(1, 21);
+
+        for (var i = 0; i < n; i++) {
+            A.push(Array.from({
+                length: m
+            }, () => Math.floor(Math.random() * m)));
+            B.push(Array.from({
+                length: m
+            }, () => Math.floor(Math.random() * m)));
+            R.push(Array.from({
+                length: m
+            }, () => 0));
+        }
+
+        console.log(A);
+        console.log(B);
+
+        count = 0;
+        for (var i = 0; i < n; i++) {
+            var myWorker = new Worker('additionMatrixWorker.js');
+            myWorker.addEventListener('message', function(e) {
+                count += e.data;
+                console.log('worker count: ', e.data);
+            }, false);
+            myWorker.postMessage([i, n, m, A, B, R]);
+        }
+    </script>
+</body>
+
+</html>
